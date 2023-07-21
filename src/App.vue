@@ -1,26 +1,75 @@
-<script setup>
-import { ref } from 'vue'
-
-const msg = "Hello World"
-const rawHtml = "<li>Daftar 1</li>"
-const link = "https://www.youtube.com/"
-
-let a= 10
-let b= 5
-let c = a+b
-
-</script>
-
 <template>
-  <div id="app">
-    <span>{{ msg }}</span><br>
-    <span v-html="rawHtml"></span><br>
-    <button :disabled="isButtonDisabled">Button</button><br>
-    <span style="color:brown;">warna coklat</span><br>
-    <a v-bind:href="link"> youtube </a>
-
-    bil 1 = {{ a }}<br>
-    bil 2 = {{ b }}<br>
-    hasil bil 1 + bil 2 = {{ c }}
+  <div>
+    <h2>Formulir</h2>
+    <form @submit.prevent="submitForm">
+      <label for="">Nama</label>
+      <input class="{'is-invalid':isInvalidName}" 
+      type="text" name="nama" v-model="kontak.nama">
+      <div v-if="isInvalidName" class="error-message">
+        Nama Harus Di Isi!
+      </div>
+      <br>
+      <label for="">Email</label>
+      <input class="{'is-invalid':isInvalidEmail}"
+      type="email" name="email" v-model="kontak.email">
+      <div v-if="isInvalidEmail" class="error-message">
+        Email Harus Di Isi!
+      </div>
+      <br>
+      <button type="submit">Simpan</button>
+    </form>
+    <div v-if="showResult">
+      nama : {{ name }} <br>
+      email : {{ email }}
+    </div>
   </div>
 </template>
+
+<script>
+import { ref } from 'vue';
+
+export default {
+  data() {
+    return {
+      kontak: {
+        nama: '',
+        email: '',
+      },
+      showResult: ref(false),
+      name: ref(''),
+      email: ref(''),
+    };
+  },
+  computed: {
+    isInvalidName() {
+      return this.name.length <= 1;
+    },
+    isInvalidEmail() {
+      return this.email.length <= 1;
+    }
+  },
+  methods: {
+    submitForm() {
+      this.name = this.kontak.nama;
+      this.email = this.kontak.email;
+      this.showResult = true;
+      this.isInvalidEmail = false;
+      this.isInvalidName = false
+    },
+  },
+};
+</script>
+
+<style>
+h2 {
+  color: black;
+}
+.error-message{
+  color: red;
+  margin-top: 5px;
+}
+
+.is-invalid {
+  border-color: red;
+}
+</style>
